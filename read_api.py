@@ -1,29 +1,28 @@
-
 import sys
 import csv
 
 from nsone import NSONE
 from twisted.internet import defer
-from twisted.internet import reactor,task
-from twisted.internet.task import react
+from twisted.internet import reactor
+from twisted.internet import task
 
+# Success handler for the main function
 def handleMainSuccess(*args):
     print "Success. Shutting down"
     reactor.stop()
-    return
-   
+
+# Error handler for the main functio   
 def handleMainError(failure):
     print(failure)
     reactor.stop()
-    return
 
+# Success handler for the read_record function
 def handleSuccess(*args):
     print "Success. Shutting down"
-    return
 
+# Error handler for the read_record function
 def handleError(failure):
     print(failure)
-    return
 
 
 @defer.inlineCallbacks
@@ -42,7 +41,7 @@ def read_record(key,row):
         zone = yield nsone.loadZone(row['Zone'])
         print("Zone %s already exists - loading"%(row['Zone']))
 
-           # we get the attribute dynamically to make it compact
+    # we get the attribute dynamically to make it compact
     func = getattr(zone,services[row['Type']])
 
     try:
@@ -80,12 +79,16 @@ def main(fname,key):
 
      
 if __name__=='__main__':
+   # read the stdin arguments
    fname = sys.argv[1] 
    key = sys.argv[2] 
 
+   # defer execution by 0.5 sec
    d = task.deferLater(reactor, 0.5, main, fname, key)
    d.addCallback(handleMainSuccess)
    d.addErrback(handleMainError)
+
+   # run reactor
    reactor.run()
 
 
