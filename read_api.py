@@ -17,7 +17,7 @@ def handleError(failure):
 @defer.inlineCallbacks
 def main(fname):
    # connect the nsone API
-   nsone = NSONE(apiKey='YmZB3gnt2MxolyCCKMOR')
+   nsone = NSONE(apiKey='42342342342342')
 
    # Open the csv file, parse and populate
    
