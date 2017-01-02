@@ -8,7 +8,7 @@ from twisted.internet import task
 
 # Success handler for the main function
 def handleMainSuccess(*args):
-    print "Success. Shutting down"
+    print "Success. Shutting down main."
     reactor.stop()
 
 # Error handler for the main functio   
@@ -18,7 +18,7 @@ def handleMainError(failure):
 
 # Success handler for the read_record function
 def handleSuccess(*args):
-    print "Success. Shutting down"
+    print "Success. Shutting down subtask."
 
 # Error handler for the read_record function
 def handleError(failure):
