@@ -15,64 +15,47 @@ def handleError(failure):
     print(failure)
     reactor.stop()
 
+
 @defer.inlineCallbacks
 def main(fname,key):
    # connect the nsone API
    nsone = NSONE(apiKey=key)
-   # Open the csv file, parse and populate
-   print dir(nsone)
-   if not hasattr(nsone, 'createZone'):
-       print("You provided an invalid key.Try again.")
-       return 
+
+   # Create a dictionary to store type of records and their attributes
+   services = {'A':'add_A','MX':'add_MX','TXT':'add_TXT','CNAME':'add_CNAME'}
+
  
    with open(fname) as csvfile:
+       # Read csv
        reader = csv.DictReader(csvfile)
 
        for row in reader:
+           # Just print the zone and record data    
            print(row['Name'], row['Zone'], row['Type'], row['TTL'], row['Data'])
            
            try:
+               # Try creating a zone 
                zone = nsone.createZone(row['Zone'], nx_ttl=row['TTL'])
                print("Created ne zone %s"%(row['Zone']))
             
            except Exception, R:
-               print '----'+str(R)
+               # Dismiss  - zone exists - load one
                zone = nsone.loadZone(row['Zone'])
                print("Zone %s already exists - loading"%(row['Zone']))
            
-           if row['Type']=='A':
-               try:
-                   zone.add_A(row['Zone'],row['Data']) 
-                   print("Added A record %s %s"%(row['Zone'],row['Data']))    
-               except Exception, R:
-                   print("Dismissed A record %s %s"%(row['Zone'],row['Data']))
-  
-           elif row['Type']=='CNAME':
-               try:
-                   zone.add_CNAME(row['Zone'],row['Data'])
-                   print("Added CNAME record %s %s"%(row['Zone'],row['Data']))
-               except Exception, R:
-                   print("Dismissed CNAME  record %s %s"%(row['Zone'],row['Data']))
+           # we get the attribute dynamically to make it compact
+           func = getattr(zone,services[row['Type']])
+           
+           try:
+               # call the add_X based on selection from dictionary
+               func(row['Zone'],row['Data'])   
+               print("Added %s record %s %s"%(row['Type'],row['Zone'],row['Data']))
 
-           elif row['Type']=='TXT':
-               try:
-                   zone.add_TXT(row['Zone'],row['Data'])
-                   print("Added TXT record %s %s"%(row['Zone'],row['Data']))
-               except Exception, R:
-                   print("Dismissed TXT  record %s %s"%(row['Zone'],row['Data']))
-
-           elif row['Type']=='MX':
-               try:
-                   zone.add_MX(row['Zone'],row['Data'])
-                   print("Added MX record %s %s"%(row['Zone'],row['Data']))
-               except Exception, R:
-                   print("Dismissed MX  record %s %s"%(row['Zone'],row['Data']))
+           except Exception, R:
+               # Dismiss existing - nothing done, move on
+               print("Dismissed %s record %s %s"%(row['Type'],row['Zone'],row['Data']))                 
 
  
- 
-                #zone = nsone.addZone(row['Zone'], nx_ttl=row['TTL'])            
-#
- #              print(zone)
 
 if __name__=='__main__':
    fname = sys.argv[1] 
