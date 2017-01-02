@@ -18,6 +18,5 @@ setup(name='dnsapi',
       author_email='fakeemail@gmail.com',
       install_requires=["nsone",
                         "twisted==16.6.0"],
-      scripts=['read_api.py'],
-      
+      scripts=['read_api.py'], 
      )
