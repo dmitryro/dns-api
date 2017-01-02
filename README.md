@@ -10,7 +10,7 @@ How to install
 Run ``python setup.py install`` to install,
 or place ``read_api.py`` on your Python path.
 
-You can also install it with: ``pip install djs-api -r requirements.txt``
+You can also install it with: ``pip install dns-api -r requirements.txt``
 while placing dns-api==1.0.0 in your  ``requirements.txt``
 
 How to run
