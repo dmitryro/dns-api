@@ -36,7 +36,7 @@ def main(fname,key):
            try:
                # Try creating a zone 
                zone = nsone.createZone(row['Zone'], nx_ttl=row['TTL'])
-               print("Created ne zone %s"%(row['Zone']))
+               print("Created a new zone %s"%(row['Zone']))
             
            except Exception, R:
                # Dismiss  - zone exists - load one
