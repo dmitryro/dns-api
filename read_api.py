@@ -58,8 +58,7 @@ def read_record(key,row):
 
 
 def main(fname,key):
-   # connect the nsone API
-
+   # store each read_record as task
    tasks  = []
 
    with open(fname) as csvfile:
